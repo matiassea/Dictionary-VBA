@@ -2,6 +2,8 @@
 Dictionary Class in VBA
 
 https://www.experts-exchange.com/articles/3391/Using-the-Dictionary-Class-in-VBA.html
+https://excelmacromastery.com/vba-dictionary/
+
 ## What Is a Dictionary?
 Part of the Microsoft Scripting Runtime (scrrun.dll) library, the Dictionary class allows you to create objects holding an arbitrary number of items, with each item identified by a unique key.  A Dictionary object can hold items of any data type (including other objects, such as other Dictionaries).  A Dictionary's keys can also be any data type except for arrays, although in practice they are almost always either strings or Integer/Long values.  A single Dictionary object can store items of a mix different data types, and use keys of a mix of different data types.
 
