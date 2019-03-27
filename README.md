@@ -2,6 +2,7 @@
 Dictionary Class in VBA
 
 https://www.experts-exchange.com/articles/3391/Using-the-Dictionary-Class-in-VBA.html
+
 https://excelmacromastery.com/vba-dictionary/
 
 ## What Is a Dictionary?
