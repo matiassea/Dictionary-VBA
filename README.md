@@ -171,4 +171,48 @@ Sub MakeTheList()
 End Sub
 ```
 
+## Dictionary para suma acumulativa, dejando valor total en columna E con "1"
+
+```
+Sub Funcionando_Suma_Acumulada()
+    'https://excelmacromastery.com/vba-dictionary/
+    Dim sh As Worksheet
+    Dim lastRow As Integer
+    Dim dict As Object
+    Dim i As Integer
+    Dim Contents As Variant
+    Set sh = Worksheets("Hoja1")
+    lastRow = sh.Range("A" & Rows.Count).End(xlUp).row 'conteo de columna
+    
+    Set dict = CreateObject("Scripting.Dictionary") 'Create(late binding)
+    dict.CompareMode = vbTextCompare 'Make key non case sensitive (the dictionary must be empty)
+    Contents = sh.Range("A2:B" & lastRow).Value
+    
+    For i = 1 To UBound(Contents, 1)
+        If Not dict.Exists(Contents(i, 1)) Then 'columna de conteo columna 1
+            dict.Add Contents(i, 1), Contents(i, 2)
+            'sh.Cells(i, 3).Value = dict(sh.Cells(i, 1).Value) 'columna donde deja = columna de conteo columna 1
+        Else
+            dict.Item(Contents(i, 1)) = dict.Item(Contents(i, 1)) + Contents(i, 2) 'columna de conteo columna 1 = columna de conteo columna 1 + 1
+            'sh.Cells(i, 3).Value = dict.Item(Contents(i, 1)) 'columna donde deja = columna de conteo columna 1
+        End If
+    Next i
+     
+    For i = 2 To lastRow
+        If Cells(i, 5).Value = "1" Then
+            Cells(i, 6) = dict(Cells(i, 1).Value)
+        End If
+    Next i
+    'Arreglar columnas
+    Columns.AutoFit
+    Rows.AutoFit
+    'Destroy object variables
+    Set dict = Nothing
+End Sub
+```
+Resultado
+
+![Dictionary](https://user-images.githubusercontent.com/17385297/56093380-1318ab80-5e96-11e9-95bd-f2174d778441.PNG)
+
+
 
