@@ -216,3 +216,39 @@ Resultado
 
 
 
+## Dictionary para conteo de lineas, enumarando las lineas segun Key
+
+```
+Sub countPO2()
+
+Dim ws As Worksheet
+Dim lastRow As Long, x As Long
+Dim items As Object
+
+Application.ScreenUpdating = False
+  
+Set ws = Worksheets("Base")
+Cells(5, Ultimate_Column + 6).Value = "lineas" 'Donde va el titulo
+            Cells(5, Ultimate_Column + 6).Font.Bold = True 'Donde va el titulo en negrita
+    
+lastRow = ws.Range("E" & Rows.Count).End(xlUp).Row 'conteo de columna
+    
+    Set items = CreateObject("Scripting.Dictionary")
+    For x = 6 To lastRow
+        If Not items.Exists(ws.Cells(x, 1).Value) Then 'columna de conteo columna 1
+            items.Add ws.Cells(x, 1).Value, 1 'columna de conteo columna 1
+            ws.Cells(x, Ultimate_Column + 6).Value = items(ws.Cells(x, 1).Value) 'columna donde deja = columna de conteo columna 1
+        Else
+            items(ws.Cells(x, 1).Value) = items(ws.Cells(x, 1).Value) + 1 'columna de conteo columna 1 = columna de conteo columna 1 + 1
+            ws.Cells(x, Ultimate_Column + 6).Value = items(ws.Cells(x, 1).Value) 'columna donde deja = columna de conteo columna 1
+        End If
+    Next x
+End Sub
+```
+Resultado
+
+![Dictionary 2](https://user-images.githubusercontent.com/17385297/56093473-3bed7080-5e97-11e9-852e-8a55ccc406c3.PNG)
+
+
+
+
