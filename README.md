@@ -1,6 +1,14 @@
 # Dictionary-VBA
 Dictionary Class in VBA
 
+'https://excelmacromastery.com/vba-dictionary/
+
+'https://www.experts-exchange.com/articles/3391/Using-the-Dictionary-Class-in-VBA.html
+
+'https://stackoverflow.com/questions/915317/does-vba-have-dictionary-structure
+
+'https://github.com/VBA-tools/VBA-Dictionary/blob/master/Dictionary.cls
+
 https://www.experts-exchange.com/articles/3391/Using-the-Dictionary-Class-in-VBA.html
 
 https://excelmacromastery.com/vba-dictionary/
