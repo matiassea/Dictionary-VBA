@@ -260,8 +260,6 @@ Resultado
 
 ## Dictionary para mensaje acumulativo segun email y cantidad de linea. Seleccionar el mensaje mas completo segun email
 
-![Macro email](https://user-images.githubusercontent.com/17385297/63657731-06c12b00-c773-11e9-8f83-69b5aa8a7475.JPG)
-
 ```
 Sub Funcionando_Suma_Acumulada2()
     'https://excelmacromastery.com/vba-dictionary/
@@ -298,6 +296,10 @@ Sub Funcionando_Suma_Acumulada2()
 Call Envio_masivo_email
 End Sub
 ```
+
+Resultado
+
+![Macro email](https://user-images.githubusercontent.com/17385297/63657731-06c12b00-c773-11e9-8f83-69b5aa8a7475.JPG)
 
 ## Seleccionar email con la mayor cantidad de linea y el mensaje mas completo.
 ## Envio masivo de email
