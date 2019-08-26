@@ -258,5 +258,126 @@ Resultado
 ![Dictionary 2](https://user-images.githubusercontent.com/17385297/56093473-3bed7080-5e97-11e9-852e-8a55ccc406c3.PNG)
 
 
+## Dictionary para mensaje acumulativo segun email y cantidad de linea. Seleccionar el mensaje mas completo segun email
+
+![Macro email](https://user-images.githubusercontent.com/17385297/63657731-06c12b00-c773-11e9-8f83-69b5aa8a7475.JPG)
+
+```
+Sub Funcionando_Suma_Acumulada2()
+    'https://excelmacromastery.com/vba-dictionary/
+    Dim sh As Worksheet
+    Dim lastRow As Integer
+    Dim dict As Object
+    Dim i As Integer
+    Dim Contents As Variant
+
+    Set sh = Worksheets("Hoja1")
+    lastRow = sh.Range("B" & Rows.Count).End(xlUp).Row 'conteo de columna
+    
+    Set dict = CreateObject("Scripting.Dictionary") 'Create(late binding)
+    dict.CompareMode = vbTextCompare 'Make key non case sensitive (the dictionary must be empty)
+    Contents = sh.Range("B1:G" & lastRow).Value 'Campo donde esta la informacion
+    
+    For i = 2 To UBound(Contents, 1)
+        If Not dict.exists(Contents(i, 1)) Then 'La columna 3, sera la columna comparativa
+            dict.Add Contents(i, 1), "N° Ticket " & Contents(i, 2) & " - " & "N° Solicitud " & Contents(i, 3) & " - " & "Estado Solicitud " & Contents(i, 4) & " - " & "Estado Presupuesto " & Contents(i, 5) & " - " & "SLA " & Contents(i, 6) & " dias"
+        Else
+            dict(Contents(i, 1)) = dict(Contents(i, 1)) & vbNewLine & "N° Ticket " & Contents(i, 2) & " - " & "N° Solicitud " & Contents(i, 3) & " - " & "Estado Solicitud " & Contents(i, 4) & " - " & "Estado Presupuesto " & Contents(i, 5) & " - " & "SLA " & Contents(i, 6) & " dias"
+        End If
+    
+    Cells(i, 8) = dict(Contents(i, 1))
+    'Debug.Print (dict(Contents(i, 1)))
+    'Debug.Print ("---------------------------------------------------------------")
+    Next i
+
+    'Destroy object variables
+    Set dict = Nothing
+    
+    'Debug.Print ("----------TERMINO----------")
+
+Call Envio_masivo_email
+End Sub
+```
+
+## Seleccionar email con la mayor cantidad de linea y el mensaje mas completo.
+## Envio masivo de email
+
+```
+Sub Envio_masivo_email()
+'https://stackoverflow.com/questions/54370800/find-max-min-value-in-dictionary-values-in-vba/54371824
+Dim ws As Worksheet
+Dim lastRow As Long, x As Long
+Dim dict As Object
+Dim OutApp As Object
+Dim OutMail As Object
+Dim strbody As String
+Dim i As Integer
 
 
+Application.ScreenUpdating = False
+  
+Set ws = Worksheets("Hoja1")
+Cells(1, 9).Value = "Conteo de email" 'Donde va el titulo
+            Cells(1, 9).Font.Bold = True 'Donde va el titulo en negrita
+    
+lastRow = ws.Range("B" & Rows.Count).End(xlUp).Row 'conteo de columna
+    
+    Set dict = CreateObject("Scripting.Dictionary")
+    For x = 2 To lastRow
+        If Not dict.exists(ws.Cells(x, 2).Value) Then 'columna de conteo columna 1
+            dict.Add ws.Cells(x, 2).Value, 1 'columna de conteo columna 1
+            ws.Cells(x, 9).Value = dict(ws.Cells(x, 2).Value) 'columna donde deja = columna de conteo columna 1
+        Else
+            dict(ws.Cells(x, 2).Value) = dict(ws.Cells(x, 2).Value) + 1 'columna de conteo columna 1 = columna de conteo columna 1 + 1
+            ws.Cells(x, 9).Value = dict(ws.Cells(x, 2).Value) 'columna donde deja = columna de conteo columna 1
+        End If
+    Next x
+        
+    max = Application.max(dict.items)
+    min = Application.min(dict.items)
+    
+'Debug.Print key
+
+    For Each key In dict
+        For x = 2 To lastRow
+        If Cells(x, 2) = key And Cells(x, 9) = dict(key) Then
+            Set OutApp = CreateObject("Outlook.Application")
+            Set OutMail = OutApp.CreateItem(0)
+            
+            strbody = "Estimados" & vbNewLine & vbNewLine & _
+                        "Las siguientes solicitudes: " & vbNewLine & vbNewLine & _
+                        Cells(x, 8).Text & vbNewLine & vbNewLine & _
+                        "Gracias"
+            On Error Resume Next
+            With OutMail
+                '.To = "matias.vidal@serviciosandinos.net"
+                .To = Cells(x, 2).Text
+                .CC = "jose.fuentes@serviciosandinos.net"
+                .BCC = ""
+                '.Subject = Worksheets("Hoja1").Cells(i, 3).Value
+                .Subject = "Solicitudes Pendientes SSC"
+                .Body = strbody
+                'You can add a file like this
+                '.Attachments.Add ("C:\test.txt")
+                .Importance = 2
+                .Send   'or use .Display
+            End With
+            On Error GoTo 0
+            Set OutMail = Nothing
+            Set OutApp = Nothing
+        End If
+        Next x
+    Debug.Print key
+    Debug.Print dict(key)
+    Debug.Print lastRow
+    Next
+
+
+'Range("G1:H10000").Clear
+Columns([9]).EntireColumn.Delete
+Columns([8]).EntireColumn.Delete
+Columns.AutoFit
+Rows.AutoFit
+End Sub
+
+```
