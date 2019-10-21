@@ -406,8 +406,11 @@ Else
 End If
 Next i
 ```
-Codigo completo
+Resultado
 
+![bajar](https://user-images.githubusercontent.com/17385297/67202916-2cb82400-f3e0-11e9-834c-3aefae73de81.JPG)
+
+Codigo completo
 ```
 Sub Dictionary_cuenta_contable_proveedor()
     'https://excelmacromastery.com/vba-dictionary/
