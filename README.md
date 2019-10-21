@@ -383,3 +383,82 @@ Rows.AutoFit
 End Sub
 
 ```
+## Dictionary para sumar los valores asociados a un Key.
+
+Contensts es la matriz que comienza con la llave y llega hasta el value.
+```
+Contents = sh.Range("A1:C" & lastRow).Value 'Campo donde esta la informacion
+```
+UBound(Contents, 1). Indica la matriz donde se busca.
+
+```
+For i = 2 To UBound(Contents, 1)
+```
+
+En caso que no exista la Key, asociar la Key Contents(i, 1) con item Contents(i, 3)
+En caso que existe agregar con una salto de linea vbNewLine
+```
+
+If Not dict.exists(Contents(i, 1)) Then 'La columna H, sera la columna comparativa
+    dict.Add Contents(i, 1), Contents(i, 3)
+Else
+    dict.Item(Contents(i, 1)) = dict.Item(Contents(i, 1)) & vbNewLine & Contents(i, 3)
+End If
+Next i
+```
+Codigo completo
+
+```
+Sub Dictionary_cuenta_contable_proveedor()
+    'https://excelmacromastery.com/vba-dictionary/
+    Dim sh As Worksheet
+    Dim sh2 As Worksheet
+    Dim lastRow As Long
+    Dim lastRow2 As Long
+    Dim dict As Object
+    Dim i As Long
+    Dim Contents As Variant
+
+    Worksheets("Status_data_total").Activate
+    Set sh = Worksheets("Status_data_total")
+    lastRow = sh.Range("A" & Rows.Count).End(xlUp).Row 'conteo de columna
+    
+    Set dict = CreateObject("Scripting.Dictionary") 'Create(late binding)
+    dict.CompareMode = vbTextCompare 'Make key non case sensitive (the dictionary must be empty)
+    Contents = sh.Range("A1:C" & lastRow).Value 'Campo donde esta la informacion
+    
+    For i = 2 To UBound(Contents, 1)
+            If Not dict.exists(Contents(i, 1)) Then 'La columna H, sera la columna comparativa
+            dict.Add Contents(i, 1), Contents(i, 3)
+            Else
+            'If dict.Item(Contents(i, 1)) = Contents(i, 69) Then
+                'dict.Item(Contents(i, 1)) = dict.Item(Contents(i, 1))
+            'Else
+                dict.Item(Contents(i, 1)) = dict.Item(Contents(i, 1)) & vbNewLine & Contents(i, 3)
+            'End If
+            End If
+    Next i
+
+        'For Each Item In dict.Item
+        '    Debug.Print dict.Item
+        'Next Item
+    Worksheets("EXCEPCIONES(total)").Activate
+    Set sh2 = Worksheets("EXCEPCIONES(total)")
+    lastRow2 = sh2.Range("A" & Rows.Count).End(xlUp).Row 'conteo de columna
+    'Contents = sh2.Range("A1:L" & lastRow).Value 'Campo donde esta la informacion
+    sh2.Cells(1, 7) = "Cuenta Contable"
+    For i = 2 To lastRow2
+        If Not dict.exists(sh2.Cells(i, 2).Value) Then
+            sh2.Cells(i, 7) = "No cuenta contable"
+        Else
+            sh2.Cells(i, 7) = dict(sh2.Cells(i, 2).Value)
+        End If
+    Next i
+    Columns.AutoFit
+    Rows.AutoFit
+    'Destroy object variables
+    Set dict = Nothing
+    Debug.Print ("----------TERMINO-Dictionary_cuenta_contable_proveedor---------")
+'Call Limpiar_String
+End Sub
+```
